@@ -1,5 +1,1 @@
-Here you can say lots of fun things about your site.
-
-Maybe say a some things about yourself.
-
-Or maybe what you plan to blog about.
+OpenBiohazard2 is open source re-implementation of the original Resident Evil 2 engine written in Go and OpenGL. You must own a copy of the original game to run this game.
