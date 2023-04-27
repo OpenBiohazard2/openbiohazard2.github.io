@@ -46,6 +46,6 @@ Project Code: <https://github.com/OpenBiohazard2/Bio2ScriptIde>
 <img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/script-ide-v2.png" />
 </div>
 
-## Applications
+## Impact
 
 With a working script viewer, we can use this to research each room in the game. OpenBiohazard2 has a working scripting system that can execute both the initial script (init.scd) and the main script (main.scd), but only some scripting functions have been implemented.

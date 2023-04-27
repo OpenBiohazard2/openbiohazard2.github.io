@@ -18,22 +18,7 @@ The curve has 80 vertical lines. For each line, it is defined by a (yOffset, hei
 * yOffset: The position from the top edge of the screen.
 * height: The height of the vertical line.
 
-Depending on the player's status, e.g. fine, caution, danger, etc., the shape of each health ECG curve is defined differently. The curve is hardcoded in the code as an array.
-
-```go
-	lines := [80][2]int{
-		{15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0},
-		{15, 0}, {15, 0}, {15, 0}, {14, 0}, {13, 0}, {12, 0}, {12, 0}, {13, 2}, {15, 3}, {18, 2},
-		{20, 0}, {16, 4}, {8, 8}, {5, 3}, {4, 0}, {5, 3}, {8, 7}, {15, 4}, {19, 5}, {24, 3},
-		{27, 0}, {25, 2}, {21, 4}, {16, 5}, {14, 2}, {13, 0}, {14, 2}, {16, 3}, {19, 0}, {19, 0},
-		{18, 0}, {16, 2}, {14, 2}, {13, 0}, {12, 0}, {13, 0}, {14, 1}, {15, 0}, {15, 0}, {15, 0},
-		{15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0},
-		{15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0},
-		{15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0}, {15, 0},
-	}
-```
-
-The color and gradient is defined separately in RGB form, where the minimum value is 0 and the maximum value is 255. For example, ff we render the entire ECG curve for the "Fine" status as described by the array and set the color to green, it would look like this:
+Depending on the player's status, e.g. fine, caution, danger, etc., the shape of each health ECG curve is defined differently. The curve is hardcoded in the code as an array. The color and gradient is defined separately in RGB form, where the minimum value is 0 and the maximum value is 255. For example, If we render the entire ECG curve for the "Fine" status as described by the array and set the color to green, it would look like this:
 
 <div style="display:inline-block;">
 <img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/health-ecg-full-curve.png" />
