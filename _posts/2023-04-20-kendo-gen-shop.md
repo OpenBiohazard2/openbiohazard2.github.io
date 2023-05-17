@@ -1,6 +1,10 @@
 # Room 1010: Kendo's Gun Shop
 
-After escaping the zombines on the street in the beginning of the game, the player will enter Kendo Gun Shop. The owner of the store Robert Kendo will point a gun at the player, but realize the player is a human and instead locks the door of the gun shop to prevent anyone else from entering. However, the zombies will eventually find a way into the shop by smashing the glass.
+<div style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-overworld-room1010.png" />
+</div>
+
+After escaping the zombies on the street in the beginning of the game in room 1000, the player will enter Kendo Gun Shop, which is shown as room 1010 in the above image. The owner of the store Robert Kendo will point a gun at the player, but realize the player is a human and instead locks the door of the gun shop to prevent anyone else from entering. However, the zombies will eventually find a way into the shop by smashing the glass. The player will have to leave the shop and proceed to room 1020, which is the back alley.
 
 In this article, we will be running the original Resident Evil 2 and the open source version OpenBiohazard2. The open source version has partially implemented the game, which means some features such as zombies won't show up. The open source version will render the areas for debugging and log the script statements in the output, which makes it much easier for us to understand how the game works internally.
 
@@ -10,8 +14,9 @@ When the player interacts with a trigger area, some function "main.scd" will be 
 1. AOT type 0 does nothing.
 2. AOT type 1 is for the area around the door that lets the player enter or exit.
 3. AOT type 2 is for the area around the items or static objects, e.g. ammo.
-4. AOT type 3 and 4 are unknown.
-5. AOT type 5 is for triggers. When a player steps on this area, a function in the main script will be executed.
+4. AOT type 3 is unknown.
+5. AOT type 4 is for messages that show up when the player interacts with an object.
+6. AOT type 5 is for triggers. When a player steps on this area, a function in the main script will be executed.
 
 ## Room initialization
 
@@ -19,24 +24,31 @@ The initial script "init.scd" will run. AOT 0 and 1 will be initialized for the 
 
 ScriptThread 0 will run starting function 0. Functions 2 and 4 are called indirectly using gosub().
 
-1. AOT 13-19 and 21 will be initialized with type 4. The purpose is still unknown.
+1. AOT 13-19 and 21 will be initialized with type 4. The purpose is to display messages when the player uses the action button next to a location.
 2. AOT 8 and 9 will be initialized as items with type 2. Objects will be initialized with id 1 and 2. These objects correspond to handgun ammo.
 3. AOT 2 and 4 will be initialized with type 0. They won't have any effect now, but will be activated later.
 5. AOT 3, 5, 6 will be initialized with type 5 as trigger areas. Stepping on these areas will execute script code.
-6. AOT 0 was reset and assigned type 5. AOT 0 corresponds to the entrance area and leaving through the entrance will execute script code.
-7. Entity 0 initialized using SceEmSet() with id 72 (Kendo)
-8. Entities 1, 2, 3, 4 initialized using SceEmSet() with id 31 (zombies)
-9. AOT 11 initialized as an item with type 2, but the item is unknown.
+6. AOT 0 was reset from a door AOT and assigned type 5. AOT 0 corresponds to the entrance area and leaving through the entrance will execute script code.
+7. Dynamic entity 0 initialized using SceEmSet() with id 72 (Kendo). Dynamic entities 1, 2, 3, 4 initialized using SceEmSet() with id 31 (zombies)
+8. AOT 11 initialized as an item with type 2, but the item is unknown.
 
 At end of running ScriptThread 0, we have initialized the following:
 1. AOT initialized (AOT 0-6, 8, 9, 11, 13-19, 21)
 2. Static objects 1, 2, which correspond to ammo
 3. Dynamic entities 0-4. Entity 0 corresponds to Kendo and entities 1-4 correspond to zombies.
 
+The image below shows what is initialized:
+
+<div style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-room1010-step1.png" />
+</div>
+
+The red blocks are the collision entities, which would be used for the walls and counters. The light blue rectangle represents the trigger area and the blue area represents the door trigger. Leon will enter Kendo's Gun Shop at AOT 0 on the top right and exit AOT 1 on the bottom right.
+
 In this article, we will mostly focus on AOT 0-6, which are used to trigger the cutscenes. The remaining script threads will set some variables.
 
-1. ScriptThread 1 runs starting function 1 and calls function 3 to set bit array values.
-2. ScriptThread 2 runs starting function 5 and calls function 6 four times to run member set for zombies.
+1. ScriptThread 1 runs starting function 1 and calls function 3 to set bit array values. The purpose is unknown.
+2. ScriptThread 2 runs starting function 5 and calls function 6 four times to run MemberSet() for zombies. The purpose is unknown.
 3. ScriptThread 3 runs starting function 8. The camera view is changed to camera 5 and the player position is set to (X=-15312, Y=0, Z=-13362).
 
 No more script threads will run until the player steps into a trigger zone, which will trigger the cutscene with Kendo.
@@ -59,7 +71,13 @@ ScriptThread 0 runs starting function 22.
 8. Camera view changed to camera 5. Focus is on player. Kendo walks over, locks the door, and talks to the player.
 9. EvtExec() called for functions 26, 24, 9 to control player and Kendo animations.
 10. Camera changed to camera 0. It is zoomed out and different from the previous views. Player can now move.
-11. AOT 0 and 4 are reset. They are assigned to type 5 and will trigger function 28. This area seems to trigger when the player tries to leave through the entrance and Kendo will stop the player.
+11. AOT 0 and 4 are reset. They are assigned to type 5 and will trigger function 28. This area seems to trigger when the player tries to leave through the entrance and Kendo will tell the player to stay inside.
+
+In the image below, you can see the result of the changes:
+
+<div style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-room1010-step2.png" />
+</div>
 
 When we compare OpenBiohazard2 to the original, we can see the timing mostly matches, except for the last camera view where Kendo locks the door.
 
@@ -87,12 +105,10 @@ Function 10 will be run.
 1. AOT 2 and 4 will be reset to type 0.
 2. The position of 4 zombies is initialized. These are the zombies that will break the glass and attack Kendo.
 3. EvtExec() will be called for functions 13 and 30.
-4. AOT 0 and 4 will be reset to type 4. These two areas previously were triggered when Kendo was alive.
+    * In function 13, there are a large number of SceEsprOn() class that are run, which seems like the glass shattering.
+    * In function 30, the limbs of one of work set (3, 0) (Kendo) will move, which is when Kendo is fighting the zombies. In function 30, there is a EvtExec() call to function 31. In function 31, there are more sprite calls and a EvtExec() call to function 32. This part seems to correspond with the zombies attacking Kendo.
+4. AOT 0 and 4 will be reset to type 4. These two areas previously were triggered when Kendo was alive and Kendo would tell the player to stay inside. However, since Kendo is dead, there is no need for this trigger.
 5. AOT 18 will be reset to type 5 and trigger function 29. The purpose of this function is unknown.
-
-In function 13, there are a large number of SceEsprOn() class that are run, which seems like the glass shattering.
-
-In function 30, the limbs of one of work set (3, 0) (Kendo) will move, which is when Kendo is fighting the zombies. In function 30, there is a EvtExec() call to function 31. In function 31, there are more sprite calls and a EvtExec() call to function 32. This part seems to correspond with the zombies attacking Kendo.
 
 When we compare OpenBiohazard2 to the original, we can see the timing matches. The cutscene takes around 10 seconds, but the horror effect is missing from OpenBiohazard2.
 
