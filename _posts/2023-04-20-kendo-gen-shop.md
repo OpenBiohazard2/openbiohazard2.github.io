@@ -20,7 +20,23 @@ When the player interacts with a trigger area, some function "main.scd" will be 
 
 ## Room initialization
 
+### Init script
+
 The initial script "init.scd" will run. AOT 0 and 1 will be initialized for the doors, one for the entrance and one for the exit respectively.
+
+<div style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-room1010-init-script.png" />
+</div>
+
+<br>
+
+<div style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-room1010-doors.png" />
+</div>
+
+The red blocks are the collision entities, which would be used for the walls and counters. The light blue rectangle represents the trigger area and the blue area represents the door trigger. Leon will enter Kendo's Gun Shop at AOT 0 on the top right and exit AOT 1 on the bottom right.
+
+### Main script
 
 ScriptThread 0 will run starting function 0. Functions 2 and 4 are called indirectly using gosub().
 
@@ -42,8 +58,6 @@ The image below shows what is initialized:
 <div style="display:inline-block;">
 <img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-room1010-step1.png" />
 </div>
-
-The red blocks are the collision entities, which would be used for the walls and counters. The light blue rectangle represents the trigger area and the blue area represents the door trigger. Leon will enter Kendo's Gun Shop at AOT 0 on the top right and exit AOT 1 on the bottom right.
 
 In this article, we will mostly focus on AOT 0-6, which are used to trigger the cutscenes. The remaining script threads will set some variables.
 
