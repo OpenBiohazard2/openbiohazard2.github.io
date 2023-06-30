@@ -34,26 +34,60 @@ The initial script "init.scd" will run. AOT 0 and 1 will be initialized for the 
 <img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-room1010-doors.png" />
 </div>
 
-The red blocks are the collision entities, which would be used for the walls and counters. The light blue rectangle represents the trigger area and the blue area represents the door trigger. Leon will enter Kendo's Gun Shop at AOT 0 on the top right and exit AOT 1 on the bottom right.
+The red blocks are the collision entities, which would be used for the walls and counters. The light blue rectangle represents the trigger area and the blue area represents the door trigger. Leon will enter Kendo's Gun Shop at AOT 0 on the top right and exit AOT 1 on the bottom left.
 
 ### Main script
 
 ScriptThread 0 will run starting function 0. Functions 2 and 4 are called indirectly using gosub().
 
-1. AOT 13-19 and 21 will be initialized with type 4. The purpose is to display messages when the player uses the action button next to a location.
-2. AOT 8 and 9 will be initialized as items with type 2. Objects will be initialized with id 1 and 2. These objects correspond to handgun ammo.
-3. AOT 2 and 4 will be initialized with type 0. They won't have any effect now, but will be activated later.
-5. AOT 3, 5, 6 will be initialized with type 5 as trigger areas. Stepping on these areas will execute script code.
-6. AOT 0 was reset from a door AOT and assigned type 5. AOT 0 corresponds to the entrance area and leaving through the entrance will execute script code.
-7. Dynamic entity 0 initialized using SceEmSet() with id 72 (Kendo). Dynamic entities 1, 2, 3, 4 initialized using SceEmSet() with id 31 (zombies)
-8. AOT 11 initialized as an item with type 2, but the item is unknown.
+<div style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-function0.png" />
+</div>
+
+<br>
+
+<div style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-function2.png" />
+</div>
+
+#### Type 2: Items
+
+<div style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-room1010-items.png" />
+</div>
+
+AOT 8 and 9 will be initialized as items with type 2. Objects will be initialized with id 1 and 2. These objects correspond to handgun ammo. AOT 11 initialized as an item with type 2, which is the shotgun, but won't be available for the player until after Kendo dies.
+
+#### Type 4: Display messages
+
+<div style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-room1010-messages.png" />
+</div>
+
+AOT 13-19 and 21 will be initialized with type 4. The purpose is to display messages when the player uses the action button next to a location.
+
+#### Type 0 and Type 5: Triggers
+
+<div style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-room1010-step1-triggers.png" />
+</div>
+
+AOT 2 and 4 will be initialized with type 0. They won't have any effect now, but will be activated later. AOT 3, 5, 6 will be initialized with type 5 as trigger areas. Stepping on these areas will execute script code.
+
+AOT 0 was reset from a door AOT and assigned type 5. AOT 0 corresponds to the entrance area and leaving through the entrance will execute script code.
+
+#### Entities
+
+Dynamic entity 0 initialized using SceEmSet() with id 72 (Kendo). Dynamic entities 1, 2, 3, 4 initialized using SceEmSet() with id 31 (zombies) 
+
+#### Summary
 
 At end of running ScriptThread 0, we have initialized the following:
 1. AOT initialized (AOT 0-6, 8, 9, 11, 13-19, 21)
 2. Static objects 1, 2, which correspond to ammo
 3. Dynamic entities 0-4. Entity 0 corresponds to Kendo and entities 1-4 correspond to zombies.
 
-The image below shows what is initialized:
+The image below shows what is initialized. Items were excluded from the image because the text overlapped with the other boxes:
 
 <div style="display:inline-block;">
 <img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-room1010-step1.png" />
@@ -74,6 +108,12 @@ The cutscene will trigger when you try to leave the store through the entrance (
 In Resident Evil 2, the game uses prerendered backgrounds and each room will have multiple cameras. Based on the zone the player is in, the game will determine which camera and prerendered background to show. During the cutscene, the camera and prerendered background will automatically be changed to show different views of a scene. There are sleep calls to control the timing of each camera view. At the end of the cutscene, the camera will focus back on the player to make it easy for the player to know when they can regain control of their character.
 
 ScriptThread 0 runs starting function 22.
+
+The image below shows only cameras 0, 5, 10, 11, which are part of the cutscene. The room has other cameras, but they aren't shown for clarity.
+
+<div style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-cutscene-cameras.png" />
+</div>
 
 1. AOT 0, 5, 6 get reset to type 0. These areas previously were used to trigger the cutscene, but setting these areas to type 0 ensures the cutscene is only triggered once.
 2. Camera view changed to camera 10. Zooms out from player and shows both Leon and Kendo.
