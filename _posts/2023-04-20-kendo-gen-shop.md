@@ -128,7 +128,7 @@ In this article, we will mostly focus on AOT 0-6, which are used to trigger the 
 
 1. ScriptThread 1 runs starting function 1 and calls function 3 to set bit array values. The purpose is unknown.
 2. ScriptThread 2 runs starting function 5 and calls function 6 four times to run MemberSet() for zombies. The purpose is unknown.
-3. ScriptThread 3 runs starting function 8. The camera view is changed to camera 5 and the player position is set to (X=-15312, Y=0, Z=-13362).
+3. ScriptThread 3 runs starting function 8. The camera view is changed to camera 5 and initializes the player's position.
 
 No more script threads will run until the player steps into a trigger zone, which will trigger the cutscene with Kendo.
 
@@ -136,7 +136,7 @@ No more script threads will run until the player steps into a trigger zone, whic
 
 In Resident Evil 2, the game uses prerendered backgrounds and each room will have multiple cameras. Based on the zone the player is in, the game will determine which camera and prerendered background to show. 
 
-During the cutscene, the camera and prerendered background will automatically be changed to show different views of a scene. There are sleep calls to control the timing of each camera view. At the end of the cutscene, the camera will focus back on the player to make it easy for the player to know when they can regain control of their character.
+During the cutscene, the camera and prerendered background will automatically be changed to show different views of a scene. There are sleep calls to control the timing of each camera view and how long to wait. At the end of the cutscene, the camera will focus back on the player to know when they can regain control of their character.
 
 To understand the position of the cameras, the image below shows the cameras used in the cutscene. Only cameras 0, 5, 10, 11 are shown for clarity, but the room has other cameras which aren't part of the cutscene.
 
@@ -144,7 +144,7 @@ To understand the position of the cameras, the image below shows the cameras use
 <img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-cutscene-cameras.png" />
 </div>
 
-The cutscene will trigger when you try to leave the store through the entrance (AOT 0) or when you try to move inside the store and step on a trigger area (AOT 5 or AOT 6). No matter which trigger area you step on, the script will call EvtExec(), which will start a new script thread and execute any code that was defined for that function. 
+The cutscene will trigger when you try to leave the store through the entrance (AOT 0) or when you try to move inside the store and step on a trigger area (AOT 5 or AOT 6). No matter which trigger area you step on, the script will call EvtExec(), which will start a new script thread and execute any code that was defined for that function. When the camera is changed, the script calls CutChg() to change the view.
 
 When the cutscene is triggered, the script runs function 22 in "main.scd" using EvtExec(). 
 
@@ -199,6 +199,12 @@ When we compare OpenBiohazard2 to the original, we can see the timing mostly mat
 When the player moves to the back of the store to pick up ammo, they will step on AOT 3, which will call function 14, but won't trigger an immediate reaction. Function 14 will set AOT 2 to be type 5. 
 
 <div style="display:inline-block;">
+<img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-function14.png" />
+</div>
+
+<br>
+
+<div style="display:inline-block;">
 <img src="https://raw.githubusercontent.com/OpenBiohazard2/openbiohazard2.github.io/main/assets/img/kendo-gun-shop-room1010-step3.png" />
 </div>
 
@@ -209,8 +215,8 @@ The script will run function 10 in "main.scd", which triggers the cutscene:
 1. AOT 2 and 4 will be reset to type 0.
 2. The position of 4 zombies is initialized. These are the zombies that will break the glass and attack Kendo.
 3. EvtExec() will be called for functions 13 and 30.
-    * In function 13, there are a large number of SceEsprOn() class that are run, which seems like the glass shattering.
-    * In function 30, the limbs of one of work set (3, 0) (Kendo) will move, which is when Kendo is fighting the zombies. In function 30, there is a EvtExec() call to function 31. In function 31, there are more sprite calls and a EvtExec() call to function 32. This part seems to correspond with the zombies attacking Kendo.
+    * In function 13, there are a large number of SceEsprOn() calls that will generate sprite animations, which seems to correspond to the glass shattering.
+    * In function 30, Kendo is fighting the zombies. In function 30, there is a EvtExec() call to function 31. In function 31, there are more sprite calls and a EvtExec() call to function 32. This part seems to correspond with the zombies attacking Kendo.
 4. Camera view changed to camera 12. The camera is zoomed in on zombies who break the glass and begin to attack Kendo.
 5. Camera view changed to camera 9. The camera is zoomed out to show zombies and Kendo.
 6. Camera view changed to camera 2. The camera shows the back of the store, where the player is located. The player regains control.
